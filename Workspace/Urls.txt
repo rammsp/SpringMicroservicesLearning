@@ -1,0 +1,24 @@
+Currency Exchange Url:
+http://localhost:8000/currency-exchange/from/usd/to/inr
+http://localhost:8001/currency-exchange/from/usd/to/inr
+
+Currency Conversion Url:
+http://localhost:8100/currency-conversion/from/usd/to/inr/quantity/123.5
+http://localhost:8100/currency-conversion-feign/from/usd/to/inr/quantity/123.5
+
+Eureka Naming Server Url:
+http://localhost:8761
+
+API Gate Way:
+http://localhost:8765
+
+API Gateway Urls:
+http://localhost:8765/currency-exchange/currency-exchange/from/usd/to/inr
+http://localhost:8765/currency-conversion/currency-conversion/from/usd/to/inr/quantity/123.5
+http://localhost:8765/currency-conversion/currency-conversion-feign/from/usd/to/inr/quantity/123.5
+
+API Gateway Urls using routers:
+http://localhost:8765/currency-exchange/from/usd/to/inr
+http://localhost:8765/currency-conversion/from/usd/to/inr/quantity/123.5
+http://localhost:8765/currency-conversion-feign/from/usd/to/inr/quantity/123.5
+http://localhost:8765/currency-conversion-new/from/usd/to/inr/quantity/123.5

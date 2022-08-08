@@ -1,0 +1,85 @@
+version: '3.7'
+services: 
+  currency-exchange:
+    image: ramsishu/currencyexchangeservice:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8000:8000"
+    networks:
+      - currency-network
+    depends_on:
+      - namingserver
+      - rabbitmq
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://namingserver:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      
+  currency-conversion:
+    image: ramsishu/currencyconversionservice:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8100:8100"
+    networks:
+      - currency-network
+    depends_on:
+      - namingserver
+      - rabbitmq
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://namingserver:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit      
+      
+  apigateway:
+    image: ramsishu/apigateway:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8765:8765"
+    networks:
+      - currency-network
+    depends_on:
+      - namingserver
+      - rabbitmq
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://namingserver:8761/eureka
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_ZIPKIN_SENDER_TYPE: rabbit
+      
+  rabbitmq:
+    image: rabbitmq:3.8.12-management
+    mem_limit: 300m
+    ports:
+      - "5672:5672"
+      - "15672:15672"  
+    networks:
+      - currency-network
+      
+  zipkin-server:
+    image: openzipkin/zipkin:2.23
+    mem_limit: 300m
+    ports:
+      - "9411:9411"
+    networks:
+      - currency-network
+    depends_on:
+      - rabbitmq
+    restart: always      
+    environment:
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672                           
+      
+  namingserver:
+    image: ramsishu/namingserver:0.0.1-SNAPSHOT
+    mem_limit: 700m
+    ports:
+      - "8761:8761"
+    networks:
+      - currency-network      
+      
+networks:
+  currency-network:
